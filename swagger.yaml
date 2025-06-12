@@ -1,0 +1,231 @@
+openapi: 3.0.0
+info:
+  title: health project
+  version: '1.0'
+servers:
+  - url: http://localhost:5001/api/health
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - auth
+      summary: user register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userregisterrequest'
+            example:
+              name: Dragostin
+              email: dragostin_lcs@yahoo.com
+              password: parola123@
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userauthresponse'
+
+  /users/login:
+    post:
+      tags:
+        - auth
+      summary: user login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/userloginrequest'
+            example:
+              email: dragostin_lcs@yahoo.com
+              password: parola123@
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/userauthresponse'
+
+  /users/logout:
+    post:
+      tags:
+        - users
+      summary: user logout
+      security:
+        - httpBearer: []
+      responses:
+        '204':
+          description: User logged out successfully
+
+  /users/daily:
+    post:
+      tags:
+        - users
+      summary: user add daily product
+      security:
+        - httpBearer: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/useradddailyproductrequest'
+            example:
+              date: 2023-11-02
+              categories: vegetables and herbs
+              weight: 100
+              title: Vegetable mix Hortex mexico
+              calories: 56
+      responses:
+        '200':
+          description: Product added
+
+  /users/daily/{id}:
+    delete:
+      tags:
+        - users
+      summary: user delete daily product
+      security:
+        - httpBearer: []
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+          required: true
+          description: The product ID.
+      responses:
+        '200':
+          description: Product deleted
+
+  /users/daily/day-info:
+    get:
+      tags:
+        - users
+      summary: get info for a day
+      security:
+        - httpBearer: []
+      responses:
+        '200':
+          description: Daily info returned
+
+  /users/calculate-calories:
+    get:
+      tags:
+        - users
+      summary: user calculate-calories
+      security:
+        - httpBearer: []
+      responses:
+        '200':
+          description: Calories calculated
+
+  /calculate-calories:
+    get:
+      tags:
+        - public
+      summary: public calculate-calories
+      responses:
+        '200':
+          description: Calories calculated
+
+  /products:
+    get:
+      tags:
+        - public
+      summary: get products
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of products
+
+components:
+  schemas:
+    userregisterrequest:
+      type: object
+      required:
+        - name
+        - email
+        - password
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+
+    userloginrequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    useradddailyproductrequest:
+      type: object
+      required:
+        - date
+        - categories
+        - weight
+        - title
+        - calories
+      properties:
+        date:
+          type: string
+        categories:
+          type: string
+        weight:
+          type: integer
+        title:
+          type: string
+        calories:
+          type: integer
+
+    userauthresponse:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            name:
+              type: string
+            email:
+              type: string
+        token:
+          type: string
+
+  securitySchemes:
+    httpBearer:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - httpBearer: []
+
+tags:
+  - name: auth
+    description: User authentication
+  - name: users
+    description: Private user actions
+  - name: public
+    description: Public endpoints
+
+
+
+# http://localhost:5001/api-docs
