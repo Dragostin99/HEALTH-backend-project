@@ -126,7 +126,7 @@ paths:
           description: Calories calculated
 
   /calculate-calories:
-    get:
+    post:
       tags:
         - public
       summary: public calculate-calories
