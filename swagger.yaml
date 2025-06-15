@@ -115,7 +115,7 @@ paths:
           description: Daily info returned
 
   /users/calculate-calories:
-    get:
+    post:
       tags:
         - users
       summary: user calculate-calories

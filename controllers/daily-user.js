@@ -53,3 +53,4 @@ const getDayInfo = async (req, res) => {
 };
 
 module.exports = { addProduct, deleteProduct, getDayInfo };
+ 
